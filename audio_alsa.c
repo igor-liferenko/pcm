@@ -274,7 +274,7 @@ int pcm_close(struct pcm *pcm)
     return 0;
 }
 
-int pcm_open(struct pcm *pcm) 
+int pcm_open(struct pcm *pcm, unsigned rate, unsigned channels) 
 {
     struct snd_pcm_info info;
     struct snd_pcm_hw_params params;
@@ -304,9 +304,9 @@ int pcm_open(struct pcm *pcm)
     param_set_min(&params, SNDRV_PCM_HW_PARAM_BUFFER_BYTES, bufsz);
     param_set_int(&params, SNDRV_PCM_HW_PARAM_SAMPLE_BITS, 16);
     param_set_int(&params, SNDRV_PCM_HW_PARAM_FRAME_BITS, 32);
-    param_set_int(&params, SNDRV_PCM_HW_PARAM_CHANNELS, 2);
+    param_set_int(&params, SNDRV_PCM_HW_PARAM_CHANNELS, channels);
     param_set_int(&params, SNDRV_PCM_HW_PARAM_PERIODS, 2);
-    param_set_int(&params, SNDRV_PCM_HW_PARAM_RATE, 44100);
+    param_set_int(&params, SNDRV_PCM_HW_PARAM_RATE, rate);
 
     if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_HW_PARAMS, &params)) {
         oops(pcm, errno, "cannot set hw params");

@@ -102,18 +102,20 @@ fail:
     return -1;
 }
 
+
 int main(int argc, char **argv)
 {
     if (argc != 2) {
         fprintf(stderr,"usage: playwav <file>\n");
         return -1;
     }
+
     int fd;
     fd = open(argv[1], O_RDONLY);
     if (fd < 0) {
         fprintf(stderr, "playwav: cannot open '%s'\n", argv[1]);
         return -1;
     }
-    return play_file(48000, 2, fd, 293892);
+    return play_file(48000, 1, fd, 146946);
 }
 

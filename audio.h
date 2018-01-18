@@ -31,7 +31,7 @@ struct pcm *pcm_alloc(void);
 /* Acquire/release an 44100 16bit stereo pcm channel.
  * Returns non-zero on error
  */
-int pcm_open(struct pcm *pcm);
+int pcm_open(struct pcm *pcm, unsigned rate, unsigned channels);
 int pcm_close(struct pcm *pcm);
 
 /* Returns a human readable reason for the last error. */
