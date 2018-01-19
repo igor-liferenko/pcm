@@ -284,6 +284,7 @@ int pcm_open(struct pcm *pcm)
     param_set_mask(&params, SNDRV_PCM_HW_PARAM_SUBFORMAT,
                    SNDRV_PCM_SUBFORMAT_STD);
     param_set_min(&params, SNDRV_PCM_HW_PARAM_BUFFER_BYTES, bufsz);
+/* FIXME: try not to set parameters except sample_bits, channels and rate - will it use some default values? */
     param_set_int(&params, SNDRV_PCM_HW_PARAM_SAMPLE_BITS, 16);
     param_set_int(&params, SNDRV_PCM_HW_PARAM_FRAME_BITS, 32);
     param_set_int(&params, SNDRV_PCM_HW_PARAM_CHANNELS, 2);
