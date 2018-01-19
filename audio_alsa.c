@@ -40,7 +40,7 @@
 #define __force
 #define __bitwise
 #define __user
-#include "asound.h"
+#include <sound/asound.h>
 
 #define DEBUG 1
 
