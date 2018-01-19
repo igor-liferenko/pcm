@@ -55,7 +55,7 @@ struct wav_header {
     uint32_t data_sz;
 };
 
-int play_file(unsigned rate, unsigned channels, int fd, unsigned count)
+int play_file(int fd, unsigned count)
 {
     struct pcm *pcm;
     unsigned avail, xfer, bufsize;
@@ -78,7 +78,7 @@ int play_file(unsigned rate, unsigned channels, int fd, unsigned count)
     next = data;
 
     pcm = pcm_alloc();
-    if (pcm_open(pcm, rate, channels))
+    if (pcm_open(pcm))
         goto fail;
 
     bufsize = pcm_buffer_size(pcm);
@@ -114,6 +114,6 @@ int main(int argc, char **argv)
         fprintf(stderr, "playwav: cannot open '%s'\n", argv[1]);
         return -1;
     }
-    return play_file(48000, 2, fd, 293892);
+    return play_file(fd, 293892); /* the number is what ls -l shows */
 }
 
