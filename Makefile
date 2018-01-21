@@ -1,4 +1,5 @@
-CFLAGS := -g -Wall -O2
-
 all:
-	gcc -w $(CFLAGS) -o playpcm playpcm.c
+	ctangle playpcm
+	gcc -w -g -Wall -O2 -o play playpcm.c
+	ctangle generate-tone
+	clang -o gen generate-tone.c -lm
