@@ -369,18 +369,14 @@ fail:
     return -1;
 }
 
-int main(int argc, char **argv)
+int main(void)
 {
-    if (argc != 2) {
-        fprintf(stderr,"usage: playwav <file>\n");
-        return -1;
-    }
     int fd;
-    fd = open(argv[1], O_RDONLY);
+    fd = open("my.pcm", O_RDONLY);
     if (fd < 0) {
-        fprintf(stderr, "playwav: cannot open '%s'\n", argv[1]);
+        fprintf(stderr, "playwav: cannot open\n");
         return -1;
     }
-    return play_file(fd, 293892); /* the number is what ls -l shows */
+    return play_file(fd, 160000); /* the number is what ls -l shows */
 }
 
