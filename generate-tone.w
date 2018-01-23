@@ -1,6 +1,8 @@
-@ @c
+@ Usig file streams enstead of raw files is better because they do buffering for us.
+
+@c
+#include <wchar.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <math.h>
 
 int main(void)
@@ -8,29 +10,27 @@ int main(void)
   signed short buf;
   int i;
 
-  FILE *f1;
+  FILE *fp;
   
-  if ((f1 = fopen("my.pcm","w")) == NULL) {
-    perror("open failed on output");
-    exit(-1);
+  if ((fp = fopen("my.pcm","w")) == NULL) {
+    fwprintf(stderr, L"open failed on output: %m");
+    return 1;
   }
 
   for (i = 0; i < 40000; i++) {
     buf = (signed short) (sin((double)i/10.0) * 32768.0);
-    fwrite(&buf, sizeof (signed short), 1, f1);
-    if (ferror(f1)) {
-      perror("write failed\n");
-      exit(-1);
+    if (!fwrite(&buf, sizeof (signed short), 1, fp)) {
+      fwprintf(stderr, L"write failed: %m\n");
+      return 1;
     }
     buf = 0;
-    fwrite(&buf, sizeof (signed short), 1, f1);
-    if (ferror(f1)) {
-      perror("write failed\n");
-      exit(-1);
+    if (!fwrite(&buf, sizeof (signed short), 1, fp)) {
+      fwprintf(stderr, L"write failed: %m\n");
+      return 1;
     }
   }
 
-  fclose(f1);
+  fclose(fp);
 
-  exit(0);
+  return 0;
 }
