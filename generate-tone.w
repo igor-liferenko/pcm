@@ -1,4 +1,4 @@
-@ Usig file streams enstead of raw files is better because they do buffering for us.
+@ Usig file streams enstead of raw files is better because they do buffering for us to write to hard drive in big chunks.
 
 @c
 #include <wchar.h>
