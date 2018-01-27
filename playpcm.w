@@ -371,6 +371,8 @@ fail:
     return -1;
 }
 
+#include <sys/stat.h>
+
 int main(void)
 {
     int fd;
@@ -379,6 +381,9 @@ int main(void)
         fprintf(stderr, "playwav: cannot open\n");
         return -1;
     }
-    return play_file(fd, 160000); /* the number is what ls -l shows */
+
+  struct stat st;
+  fstat(fd, &st);
+  return play_file(fd, st.st_size);
 }
 
