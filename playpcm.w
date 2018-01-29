@@ -378,7 +378,7 @@ int main(void)
     int fd;
     fd = open("my.pcm", O_RDONLY);
     if (fd < 0) {
-        fprintf(stderr, "playwav: cannot open\n");
+        fprintf(stderr, "cannot open\n");
         return -1;
     }
 
