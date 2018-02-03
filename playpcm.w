@@ -267,7 +267,8 @@ int pcm_open(struct pcm *pcm)
     if (pcm->fd >= 0)
         return oops(pcm, 0, "already open");
 
-    pcm->fd = open("/dev/snd/pcmC0D0p", O_RDWR);
+    if ((pcm->fd = open("/dev/snd/pcmC0D0p", O_RDWR))==-1)
+      fprintf(stderr, "ERROR: device file not found - try another one\n");
     if (pcm->fd < 0)
         return oops(pcm, errno, "cannot open device '%s'");
 
