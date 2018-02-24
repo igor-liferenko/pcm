@@ -19,7 +19,7 @@ int main(void)
   }
 
   for (i = 0; i < 40000; i++) {
-    buf = (signed short) (sin((double)i/10.0) * 32768.0);
+    buf = (signed short) @[@](sin((double)i/10.0) * 32768.0);
     if (!fwrite(&buf, sizeof @[@](signed short), 1, fp)) {
       fwprintf(stderr, L"write failed: %m\n");
       return 1;
