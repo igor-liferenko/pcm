@@ -5,3 +5,8 @@ generate-tone.ps
 generate-tone.scn
 generate-tone.tex
 generate-tone.toc
+gen
+generate-tone.c
+my.pcm
+play
+playpcm.c
