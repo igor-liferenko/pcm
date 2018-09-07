@@ -267,7 +267,7 @@ int pcm_open(struct pcm *pcm)
     if (pcm->fd >= 0)
         return oops(pcm, 0, "already open");
 
-    if ((pcm->fd = open("/dev/snd/pcmC1D0p", O_RDWR))==-1)
+    if ((pcm->fd = open("/dev/snd/pcmC2D0p", O_RDWR))==-1)
       fprintf(stderr, "ERROR: device file not found - try another one\n");
     if (pcm->fd < 0)
         return oops(pcm, errno, "cannot open device '%s'");
@@ -277,22 +277,37 @@ int pcm_open(struct pcm *pcm)
         goto fail;
     }
     info_dump(&info);
-
+printf("----------------------------------\n");
     param_init(&params);
     param_set_mask(&params, SNDRV_PCM_HW_PARAM_ACCESS,
-                   SNDRV_PCM_ACCESS_RW_INTERLEAVED);
+                   SNDRV_PCM_ACCESS_MMAP_INTERLEAVED);
     param_set_mask(&params, SNDRV_PCM_HW_PARAM_FORMAT,
                    SNDRV_PCM_FORMAT_S16_LE);
     param_set_mask(&params, SNDRV_PCM_HW_PARAM_SUBFORMAT,
                    SNDRV_PCM_SUBFORMAT_STD);
-    param_set_min(&params, SNDRV_PCM_HW_PARAM_BUFFER_BYTES, bufsz);
-    /* FIXME: try not to set parameters except sample_bits, channels and
-       rate - will it use some default values? */
-    param_set_int(&params, SNDRV_PCM_HW_PARAM_SAMPLE_BITS, 16);
-    param_set_int(&params, SNDRV_PCM_HW_PARAM_FRAME_BITS, 32);
+
+    param_set_min(&params, SNDRV_PCM_HW_PARAM_BUFFER_TIME, ?); /* Approx duration of buffer
+                                                 * in us
+                                                 */
+    param_set_min(&params, SNDRV_PCM_HW_PARAM_BUFFER_SIZE, ?); /* Size of buffer in frames */
+    param_set_min(&params, SNDRV_PCM_HW_PARAM_BUFFER_BYTES, bufsz); /* Size of buffer in bytes */
+    param_set_int(&params, SNDRV_PCM_HW_PARAM_SAMPLE_BITS, 16); /* Bits per sample */
+    param_set_int(&params, SNDRV_PCM_HW_PARAM_FRAME_BITS, 32); /* Bits per frame */
     param_set_int(&params, SNDRV_PCM_HW_PARAM_CHANNELS, 1);
-    param_set_int(&params, SNDRV_PCM_HW_PARAM_PERIODS, 2);
+    param_set_int(&params, SNDRV_PCM_HW_PARAM_PERIODS, 2); /* Approx interrupts per
+                                                 * buffer
+                                                 */
     param_set_int(&params, SNDRV_PCM_HW_PARAM_RATE, 32000);
+    param_set_min(&params, SNDRV_PCM_HW_PARAM_PERIOD_TIME, ?); /* Approx distance between
+                                                 * interrupts in us
+                                                 */
+    param_set_min(&params, SNDRV_PCM_HW_PARAM_PERIOD_SIZE, ?); /* Approx frames between
+                                                 * interrupts
+                                                 */
+    param_set_min(&params, SNDRV_PCM_HW_PARAM_PERIOD_BYTES, ?); /* Approx bytes between
+                                                 * interrupts
+                                                 */
+    param_set_min(&params, SNDRV_PCM_HW_PARAM_TICK_TIME, ?); /* Approx tick duration in us */
 
     if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_HW_PARAMS, &params)) {
         oops(pcm, errno, "cannot set hw params");
