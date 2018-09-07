@@ -267,7 +267,7 @@ int pcm_open(struct pcm *pcm)
     if (pcm->fd >= 0)
         return oops(pcm, 0, "already open");
 
-    if ((pcm->fd = open("/dev/snd/pcmC0D0p", O_RDWR))==-1)
+    if ((pcm->fd = open("/dev/snd/pcmC1D0p", O_RDWR))==-1)
       fprintf(stderr, "ERROR: device file not found - try another one\n");
     if (pcm->fd < 0)
         return oops(pcm, errno, "cannot open device '%s'");
@@ -290,9 +290,9 @@ int pcm_open(struct pcm *pcm)
        rate - will it use some default values? */
     param_set_int(&params, SNDRV_PCM_HW_PARAM_SAMPLE_BITS, 16);
     param_set_int(&params, SNDRV_PCM_HW_PARAM_FRAME_BITS, 32);
-    param_set_int(&params, SNDRV_PCM_HW_PARAM_CHANNELS, 2);
+    param_set_int(&params, SNDRV_PCM_HW_PARAM_CHANNELS, 1);
     param_set_int(&params, SNDRV_PCM_HW_PARAM_PERIODS, 2);
-    param_set_int(&params, SNDRV_PCM_HW_PARAM_RATE, 44100);
+    param_set_int(&params, SNDRV_PCM_HW_PARAM_RATE, 32000);
 
     if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_HW_PARAMS, &params)) {
         oops(pcm, errno, "cannot set hw params");
