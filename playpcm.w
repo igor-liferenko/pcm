@@ -277,31 +277,29 @@ int pcm_open(struct pcm *pcm)
         goto fail;
     }
     info_dump(&info);
-printf("----------------------------------\n");
+    printf("----------------------------------\n");
     param_init(&params);
     param_set_mask(&params, SNDRV_PCM_HW_PARAM_ACCESS,
-                   SNDRV_PCM_ACCESS_MMAP_INTERLEAVED);
+                   SNDRV_PCM_ACCESS_RW_INTERLEAVED);
     param_set_mask(&params, SNDRV_PCM_HW_PARAM_FORMAT,
                    SNDRV_PCM_FORMAT_S16_LE);
     param_set_mask(&params, SNDRV_PCM_HW_PARAM_SUBFORMAT,
                    SNDRV_PCM_SUBFORMAT_STD);
-
+    param_set_min(&params, SNDRV_PCM_HW_PARAM_BUFFER_BYTES, bufsz);
+    /* FIXME: try not to set parameters except sample_bits, channels and
+       rate - will it use some default values? */
+    param_set_int(&params, SNDRV_PCM_HW_PARAM_SAMPLE_BITS, 16);
+    param_set_int(&params, SNDRV_PCM_HW_PARAM_FRAME_BITS, 16);
+    param_set_int(&params, SNDRV_PCM_HW_PARAM_CHANNELS, 1);
+    param_set_int(&params, SNDRV_PCM_HW_PARAM_PERIODS, 2);
+    param_set_int(&params, SNDRV_PCM_HW_PARAM_RATE, 32000);
 //data rate = 512 kbit/s
-
 //https://larsimmisch.github.io/pyalsaaudio/terminology.html
-
+#if 0
     param_set_int(&params, SNDRV_PCM_HW_PARAM_BUFFER_TIME, ?); /* Approx duration of buffer
                                                  * in us
                                                  */
     param_set_int(&params, SNDRV_PCM_HW_PARAM_BUFFER_SIZE, ?); /* Size of buffer in frames */
-    param_set_min(&params, SNDRV_PCM_HW_PARAM_BUFFER_BYTES, bufsz); /* Size of buffer in bytes */
-    param_set_int(&params, SNDRV_PCM_HW_PARAM_SAMPLE_BITS, 16); /* Bits per sample */
-    param_set_int(&params, SNDRV_PCM_HW_PARAM_FRAME_BITS, 16); /* Bits per frame */
-    param_set_int(&params, SNDRV_PCM_HW_PARAM_CHANNELS, 1);
-    param_set_int(&params, SNDRV_PCM_HW_PARAM_PERIODS, 2); /* Approx interrupts per
-                                                 * buffer
-                                                 */
-    param_set_int(&params, SNDRV_PCM_HW_PARAM_RATE, 32000);
     param_set_int(&params, SNDRV_PCM_HW_PARAM_PERIOD_TIME, ?); /* Approx distance between
                                                  * interrupts in us
                                                  */
@@ -312,7 +310,7 @@ printf("----------------------------------\n");
                                                  * interrupts
                                                  */
     param_set_int(&params, SNDRV_PCM_HW_PARAM_TICK_TIME, ?); /* Approx tick duration in us */
-
+#endif
     if (ioctl(pcm->fd, SNDRV_PCM_IOCTL_HW_PARAMS, &params)) {
         oops(pcm, errno, "cannot set hw params");
         goto fail;
