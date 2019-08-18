@@ -20,12 +20,12 @@ int main(void)
 
   for (i = 0; i < 40000; i++) {
     buf = (signed short) (sin((double)i/10.0) * 32768.0);
-    if (!fwrite(&buf, sizeof (signed short), 1, fp)) {
+    if (fwrite(&buf, sizeof (signed short), 1, fp) != 1) {
       fwprintf(stderr, L"write failed: %m\n");
       return 1;
     }
     buf = 0;
-    if (!fwrite(&buf, sizeof (signed short), 1, fp)) {
+    if (fwrite(&buf, sizeof (signed short), 1, fp) != 1) {
       fwprintf(stderr, L"write failed: %m\n");
       return 1;
     }
